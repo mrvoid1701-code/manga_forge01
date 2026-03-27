@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(gh auth:*)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-git --yes)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-git --yes --name mangaforge)",
+      "Read(//c/tmp/**)",
+      "Bash(npx create-next-app@latest mangaforge-temp --typescript --tailwind --app --no-git --yes)",
+      "Bash(cp:*)",
+      "Bash(cp /tmp/mangaforge-temp/next-env.d.ts \"C:/Users/tigan/Desktop/MANGA_Forge/\")",
+      "Bash(cp /tmp/mangaforge-temp/next.config.ts \"C:/Users/tigan/Desktop/MANGA_Forge/\")",
+      "Bash(cp /tmp/mangaforge-temp/tsconfig.json \"C:/Users/tigan/Desktop/MANGA_Forge/\")",
+      "Bash(cp -r /tmp/mangaforge-temp/app \"C:/Users/tigan/Desktop/MANGA_Forge/\")",
+      "Bash(cp -r /tmp/mangaforge-temp/public \"C:/Users/tigan/Desktop/MANGA_Forge/\")",
+      "Bash(mkdir -p \"C:/Users/tigan/Desktop/MANGA_Forge/src\")",
+      "Bash(mv \"C:/Users/tigan/Desktop/MANGA_Forge/app\" \"C:/Users/tigan/Desktop/MANGA_Forge/src/app\")",
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(node --input-type=module:*)",
+      "Bash(grep -n data?: C:/Users/tigan/Desktop/MANGA_Forge/node_modules/fabric/dist/src/CommonMethods.d.ts)",
+      "Bash(grep -rn data?: C:/Users/tigan/Desktop/MANGA_Forge/node_modules/fabric/dist/src/shapes/Object/Object.d.ts)",
+      "Bash(grep -rn ^s*data? C:/Users/tigan/Desktop/MANGA_Forge/node_modules/fabric/dist/src/shapes/Object/FabricObjectProps.d.ts)",
+      "Bash(xargs grep:*)",
+      "Bash(npm run:*)",
+      "Bash(read -p \"Paste Gemini API key: \" KEY)",
+      "Bash(curl -s \"https://generativelanguage.googleapis.com/v1beta/models?key=$KEY\")"
+    ]
+  }
+}

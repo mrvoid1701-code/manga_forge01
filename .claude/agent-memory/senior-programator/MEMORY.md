@@ -1,0 +1,2 @@
+- [MangaForge Project Context](project_mangaforge.md) — Stack, architecture, key files, AI provider pattern, canvas layer system for the manga creation platform
+- [MangaForge Technical Roadmap](project_mangaforge_roadmap.md) — Planned: manga-rules.ts (keyword-driven rule injection), bezier curves, hatching op, undo/redo, SVG export

@@ -9,21 +9,30 @@ export const metadata = {
 
 export default function CanvasPage() {
   return (
-    <div className="flex flex-col h-[100dvh] bg-gray-100">
+    <div className="flex flex-col h-[100dvh]" style={{ background: 'var(--bg-base)' }}>
+      {/* Top bar */}
       <AIProviderSelector />
+
+      {/* Main workspace */}
       <div className="flex flex-1 overflow-hidden min-h-0">
-        <main className="flex-1 flex items-center justify-center p-2 sm:p-6 overflow-auto">
+        {/* Canvas area */}
+        <main className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-auto"
+          style={{ background: 'var(--bg-base)' }}>
           <MangaCanvas />
         </main>
-        {/* On desktop: sidebar. On mobile: hidden (layers shown below) */}
+
+        {/* Desktop layer sidebar */}
         <div className="hidden sm:block">
           <LayerPanel />
         </div>
       </div>
+
       {/* Mobile layer strip */}
       <div className="sm:hidden">
         <LayerPanel horizontal />
       </div>
+
+      {/* AI prompt bar */}
       <AIPromptInput />
     </div>
   )

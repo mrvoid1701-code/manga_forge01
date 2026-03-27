@@ -1,0 +1,65 @@
+[
+  {
+    "op": "clearLayer",
+    "layer": "background"
+  },
+  {
+    "op": "clearLayer",
+    "layer": "sketch"
+  },
+  {
+    "op": "clearLayer",
+    "layer": "lineart"
+  },
+  {
+    "op": "clearLayer",
+    "layer": "shadows"
+  },
+  {
+    "op": "clearLayer",
+    "layer": "color"
+  },
+  {
+    "op": "addFilledRect",
+    "layer": "background",
+    "x": 0,
+    "y": 0,
+    "width": 800,
+    "height": 1200,
+    "fillColor": "#f0f8ff",
+    "strokeColor": "transparent",
+    "strokeWidth": 0
+  },
+  {
+    "op": "addFilledRect",
+    "layer": "background",
+    "x": 0,
+    "y": 400,
+    "width": 800,
+    "height": 800,
+    "fillColor": "#e6f2ff",
+    "strokeColor": "transparent",
+    "strokeWidth": 0
+  },
+  {
+    "op": "addFilledRect",
+    "layer": "background",
+    "x": 0,
+    "y": 800,
+    "width": 800,
+    "height": 400,
+    "fillColor": "#d9e9ff",
+    "strokeColor": "transparent",
+    "strokeWidth": 0
+  },
+  {
+    "op": "addPath",
+    "layer": "sketch",
+    "points": [
+      [
+        400,
+        300
+      ],
+      [
+        400,
+    

@@ -34,9 +34,6 @@ export default function MangaCanvas() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Stable callback — re-created only when fabricRef changes (effectively never).
-  // Registered in the Zustand store so AIPromptInput can read it without
-  // relying on window globals or prop drilling.
   const applyOperations = useCallback((operations: CanvasOperation[]) => {
     if (!fabricRef.current) {
       console.warn('[MangaCanvas] applyOperations called before canvas is ready')
@@ -79,18 +76,46 @@ export default function MangaCanvas() {
   }
 
   return (
-    <div ref={wrapperRef} className="relative border border-gray-300 shadow-lg rounded overflow-hidden max-w-full">
-      <div className="absolute top-2 left-2 z-10 text-xs text-gray-400 bg-white/70 px-2 py-0.5 rounded">
-        Layer: <span className="font-semibold text-purple-600">{activeLayer}</span>
-      </div>
-      <button
-        onClick={handleExportSvg}
-        className="absolute top-2 right-2 z-10 text-xs bg-white/80 hover:bg-white border border-gray-300 text-gray-600 px-2 py-0.5 rounded shadow-sm"
-        title="Export as SVG (open in Krita / Inkscape)"
+    <div className="flex flex-col items-center gap-3">
+      {/* Canvas wrapper */}
+      <div
+        ref={wrapperRef}
+        className="relative rounded-xl overflow-hidden canvas-glow"
+        style={{ background: '#fff' }}
       >
-        Export SVG
-      </button>
-      <canvas ref={canvasRef} className="max-w-full" />
+        {/* Layer badge */}
+        <div
+          className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium backdrop-blur-sm"
+          style={{ background: 'rgba(13,13,18,0.75)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--accent-glow)' }} />
+          {activeLayer}
+        </div>
+
+        {/* Export SVG button */}
+        <button
+          onClick={handleExportSvg}
+          className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all backdrop-blur-sm"
+          style={{
+            background: 'rgba(13,13,18,0.75)',
+            color: 'var(--text-2)',
+            border: '1px solid var(--border)',
+          }}
+          title="Export as SVG — open in Krita or Inkscape"
+        >
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <path d="M5.5 1v7M2.5 5.5l3 3 3-3M1 9.5h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          SVG
+        </button>
+
+        <canvas ref={canvasRef} className="block max-w-full" />
+      </div>
+
+      {/* Canvas size label */}
+      <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+        {canvasState.width} × {canvasState.height} px
+      </p>
     </div>
   )
 }
