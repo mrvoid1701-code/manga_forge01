@@ -53,3 +53,14 @@ export type CanvasOperation =
   | { op: 'setStroke'; objectId: string; width: number; color: string }
   | { op: 'deleteObject'; objectId: string }
   | { op: 'clearLayer'; layer: LayerType }
+  // ── Semantic operations — expanded by semantic-renderer before rendering ──
+  | { op: 'drawFace';       cx: number; cy: number; width?: number; height?: number }
+  | { op: 'drawEye';        cx: number; cy: number; size?: 'small' | 'medium' | 'large'; emotion?: 'neutral' | 'happy' | 'sad' | 'angry' | 'surprised'; irisColor?: string }
+  | { op: 'drawEyebrow';    cx: number; cy: number; side: 'left' | 'right'; emotion?: string }
+  | { op: 'drawNose';       cx: number; cy: number }
+  | { op: 'drawMouth';      cx: number; cy: number; emotion?: string; width?: number }
+  | { op: 'drawEar';        cx: number; cy: number; side: 'left' | 'right' }
+  | { op: 'drawNeck';       cx: number; cy: number; width?: number; height?: number }
+  | { op: 'drawHair';       crownX: number; crownY: number; style?: string; color?: string; length?: 'short' | 'medium' | 'long' }
+  | { op: 'drawBlush';      cx: number; cy: number; side: 'left' | 'right' }
+  | { op: 'drawBackground'; style?: string; color1?: string; color2?: string; width: number; height: number }
