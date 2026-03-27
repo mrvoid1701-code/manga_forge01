@@ -21,5 +21,6 @@ export async function callAnthropic(
   const content = response.content[0]
   if (content.type !== 'text') throw new Error('Unexpected response type')
 
-  return JSON.parse(content.text) as AIResponse
+  const clean = content.text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
+  return JSON.parse(clean) as AIResponse
 }

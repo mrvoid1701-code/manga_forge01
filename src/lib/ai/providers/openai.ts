@@ -22,5 +22,6 @@ export async function callOpenAI(
   const text = response.choices[0].message.content
   if (!text) throw new Error('Empty response')
 
-  return JSON.parse(text) as AIResponse
+  const clean = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
+  return JSON.parse(clean) as AIResponse
 }

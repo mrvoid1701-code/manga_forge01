@@ -38,5 +38,7 @@ export async function callGemini(
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
   if (!text) throw new Error('Empty Gemini response')
 
-  return JSON.parse(text) as AIResponse
+  // Gemini often wraps JSON in markdown code blocks — strip them
+  const clean = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
+  return JSON.parse(clean) as AIResponse
 }
