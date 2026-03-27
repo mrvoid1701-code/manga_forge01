@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { fabric } from 'fabric'
+import * as fabric from 'fabric'
 import { useCanvasStore } from '@/store/canvas-store'
 import { applyOperation } from '@/lib/canvas/layer-manager'
 import { CanvasOperation } from '@/types/canvas'
