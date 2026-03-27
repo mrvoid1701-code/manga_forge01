@@ -50,7 +50,8 @@ export function applyOperation(canvas: fabric.Canvas, operation: CanvasOperation
       break
     }
     case 'addText': {
-      const text = new fabric.Text(operation.text, {
+      // fabric.Text is a deprecated alias in v7; FabricText is the canonical class.
+      const text = new fabric.FabricText(operation.text, {
         left: operation.x,
         top: operation.y,
         fontSize: operation.fontSize,

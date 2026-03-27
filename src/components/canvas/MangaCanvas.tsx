@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import * as fabric from 'fabric'
 import { useCanvasStore } from '@/store/canvas-store'
 import { applyOperation } from '@/lib/canvas/layer-manager'
@@ -9,7 +9,7 @@ export default function MangaCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fabricRef = useRef<fabric.Canvas | null>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const { canvasState, activeLayer } = useCanvasStore()
+  const { canvasState, activeLayer, setApplyOperations } = useCanvasStore()
 
   useEffect(() => {
     if (!canvasRef.current || !wrapperRef.current) return
@@ -29,24 +29,28 @@ export default function MangaCanvas() {
 
     return () => {
       fabricRef.current?.dispose()
+      fabricRef.current = null
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const applyOperations = (operations: CanvasOperation[]) => {
-    if (!fabricRef.current) return
+  // Stable callback — re-created only when fabricRef changes (effectively never).
+  // Registered in the Zustand store so AIPromptInput can read it without
+  // relying on window globals or prop drilling.
+  const applyOperations = useCallback((operations: CanvasOperation[]) => {
+    if (!fabricRef.current) {
+      console.warn('[MangaCanvas] applyOperations called before canvas is ready')
+      return
+    }
     operations.forEach((op) => applyOperation(fabricRef.current!, op))
-  }
-
-  // Expose applyOperations via a global for the AI prompt component to call.
-  // This avoids prop-drilling through the layout hierarchy.
-  useEffect(() => {
-    ;(window as any).__mangaCanvasApply = applyOperations
-    return () => {
-      delete (window as any).__mangaCanvasApply
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    setApplyOperations(applyOperations)
+    return () => {
+      setApplyOperations(null)
+    }
+  }, [applyOperations, setApplyOperations])
 
   return (
     <div ref={wrapperRef} className="relative border border-gray-300 shadow-lg rounded overflow-hidden max-w-full">

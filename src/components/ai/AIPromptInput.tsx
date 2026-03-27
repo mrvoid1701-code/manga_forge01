@@ -6,8 +6,9 @@ import { runAIAgent } from '@/lib/ai'
 
 export default function AIPromptInput() {
   const [prompt, setPrompt] = useState('')
+  const [lastStatus, setLastStatus] = useState<string | null>(null)
   const { config, messages, addMessage, isLoading, setLoading } = useAIStore()
-  const { canvasState } = useCanvasStore()
+  const { canvasState, applyOperations } = useCanvasStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,22 +18,34 @@ export default function AIPromptInput() {
     addMessage(userMessage)
     setPrompt('')
     setLoading(true)
+    setLastStatus(null)
 
     try {
       const response = await runAIAgent(config, [...messages, userMessage], canvasState)
       addMessage({ role: 'assistant', content: response.explanation })
 
-      // Apply AI-generated operations to the Fabric.js canvas
-      const applyFn = (window as any).__mangaCanvasApply
-      if (typeof applyFn === 'function') {
-        applyFn(response.operations)
+      const opCount = response.operations?.length ?? 0
+      console.log('[AI] Received operations:', opCount, response.operations)
+
+      if (!applyOperations) {
+        const msg = `Canvas not ready (applyOperations is null). Operations received: ${opCount}`
+        console.error('[AI]', msg)
+        setLastStatus(msg)
+        return
       }
+
+      if (opCount === 0) {
+        setLastStatus('AI returned 0 operations — nothing to draw.')
+        return
+      }
+
+      applyOperations(response.operations)
+      setLastStatus(`Drew ${opCount} operation(s): ${response.explanation}`)
     } catch (error) {
-      console.error('AI agent error:', error)
-      addMessage({
-        role: 'assistant',
-        content: `Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`
-      })
+      console.error('[AI] agent error:', error)
+      const msg = error instanceof Error ? error.message : 'Unknown error occurred'
+      addMessage({ role: 'assistant', content: `Error: ${msg}` })
+      setLastStatus(`Error: ${msg}`)
     } finally {
       setLoading(false)
     }
@@ -40,6 +53,11 @@ export default function AIPromptInput() {
 
   return (
     <div className="border-t border-gray-200 bg-white">
+      {lastStatus && (
+        <div className="px-4 pt-2 text-xs text-gray-500 truncate" title={lastStatus}>
+          {lastStatus}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex gap-2 p-4">
         <input
           type="text"
