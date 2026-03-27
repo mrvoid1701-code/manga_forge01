@@ -9,7 +9,7 @@ export default function MangaCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fabricRef = useRef<fabric.Canvas | null>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const { canvasState, activeLayer, setApplyOperations } = useCanvasStore()
+  const { canvasState, activeLayer, setApplyOperations, setGetPreviewUrl } = useCanvasStore()
 
   useEffect(() => {
     if (!canvasRef.current || !wrapperRef.current) return
@@ -45,12 +45,19 @@ export default function MangaCanvas() {
     operations.forEach((op) => applyOperation(fabricRef.current!, op))
   }, [])
 
+  const getPreviewUrl = useCallback((): string | null => {
+    if (!fabricRef.current) return null
+    return fabricRef.current.toDataURL({ format: 'png', multiplier: 0.4 })
+  }, [])
+
   useEffect(() => {
     setApplyOperations(applyOperations)
+    setGetPreviewUrl(getPreviewUrl)
     return () => {
       setApplyOperations(null)
+      setGetPreviewUrl(null)
     }
-  }, [applyOperations, setApplyOperations])
+  }, [applyOperations, setApplyOperations, getPreviewUrl, setGetPreviewUrl])
 
   return (
     <div ref={wrapperRef} className="relative border border-gray-300 shadow-lg rounded overflow-hidden max-w-full">
