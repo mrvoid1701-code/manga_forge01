@@ -11,8 +11,29 @@ const LAYER_LABELS: Record<LayerType, string> = {
   color: 'Color'
 }
 
-export default function LayerPanel() {
+export default function LayerPanel({ horizontal = false }: { horizontal?: boolean }) {
   const { activeLayer, setActiveLayer } = useCanvasStore()
+
+  if (horizontal) {
+    return (
+      <div className="bg-gray-50 border-t border-gray-200 px-3 py-2 flex items-center gap-1 overflow-x-auto">
+        <span className="text-xs font-semibold text-gray-500 mr-2 shrink-0">Layer:</span>
+        {[...LAYER_ORDER].reverse().map((layer) => (
+          <button
+            key={layer}
+            onClick={() => setActiveLayer(layer)}
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs transition-colors ${
+              activeLayer === layer
+                ? 'bg-purple-600 text-white font-medium'
+                : 'bg-white text-gray-600 border border-gray-200'
+            }`}
+          >
+            {LAYER_LABELS[layer]}
+          </button>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className="w-48 bg-gray-50 border-l border-gray-200 p-3 flex-shrink-0">

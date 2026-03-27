@@ -27,24 +27,24 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-purple-900 text-white">
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-6xl font-bold mb-4">
+        <h1 className="text-4xl sm:text-6xl font-bold mb-4">
           Manga<span className="text-purple-400">Forge</span>
         </h1>
-        <p className="text-xl text-gray-300 mb-2">AI-Assisted Manga Creation Platform</p>
-        <p className="text-gray-400 max-w-2xl mx-auto mb-10">
+        <p className="text-lg sm:text-xl text-gray-300 mb-2">AI-Assisted Manga Creation Platform</p>
+        <p className="text-gray-400 max-w-2xl mx-auto mb-10 text-sm sm:text-base px-2">
           Describe your scene in natural language. MangaForge draws it — layer by layer, stroke by
           stroke — exactly like a human artist, orchestrated by AI.
         </p>
-        <div className="flex gap-4 justify-center mb-24">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-16 sm:mb-24 px-4">
           <Link
             href="/canvas"
-            className="px-8 py-3 bg-purple-600 rounded-lg text-lg font-semibold hover:bg-purple-700 transition-colors"
+            className="px-8 py-3 bg-purple-600 rounded-lg text-base sm:text-lg font-semibold hover:bg-purple-700 transition-colors text-center"
           >
             Start Creating
           </Link>
           <a
             href="#features"
-            className="px-8 py-3 border border-purple-400 rounded-lg text-lg hover:bg-purple-900/50 transition-colors"
+            className="px-8 py-3 border border-purple-400 rounded-lg text-base sm:text-lg hover:bg-purple-900/50 transition-colors text-center"
           >
             Learn More
           </a>
