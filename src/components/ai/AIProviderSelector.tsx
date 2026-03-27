@@ -6,7 +6,7 @@ import { AIProvider } from '@/types/ai'
 const PROVIDERS: { id: AIProvider; name: string; defaultModel: string }[] = [
   { id: 'anthropic', name: 'Claude (Anthropic)', defaultModel: 'claude-opus-4-6' },
   { id: 'openai', name: 'GPT-4o (OpenAI)', defaultModel: 'gpt-4o' },
-  { id: 'gemini', name: 'Gemini (Google)', defaultModel: 'gemini-2.0-flash' },
+  { id: 'gemini', name: 'Gemini (Google)', defaultModel: 'gemini-3-flash-preview' },
   { id: 'grok', name: 'Grok (xAI)', defaultModel: 'grok-2' }
 ]
 

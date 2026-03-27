@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAIStore } from '@/store/ai-store'
 import { useCanvasStore } from '@/store/canvas-store'
 import { runAIAgent } from '@/lib/ai'
@@ -7,7 +7,10 @@ import { runAIAgent } from '@/lib/ai'
 export default function AIPromptInput() {
   const [prompt, setPrompt] = useState('')
   const [lastStatus, setLastStatus] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
   const { config, messages, addMessage, isLoading, setLoading } = useAIStore()
+
+  useEffect(() => { setMounted(true) }, [])
   const { canvasState, applyOperations } = useCanvasStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,11 +72,11 @@ export default function AIPromptInput() {
               : 'Configure an AI provider above to start drawing'
           }
           className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-50"
-          disabled={isLoading || !config}
+          disabled={!mounted || isLoading || !config}
         />
         <button
           type="submit"
-          disabled={isLoading || !config || !prompt.trim()}
+          disabled={!mounted || isLoading || !config || !prompt.trim()}
           className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? 'Drawing...' : 'Draw'}

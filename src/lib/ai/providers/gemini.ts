@@ -37,7 +37,7 @@ export async function callGemini(
   apiKey: string,
   messages: AIMessage[],
   canvasState: CanvasState,
-  model = 'gemini-2.0-flash'
+  model = 'gemini-3-flash-preview'
 ): Promise<AIResponse> {
   // Gemini uses its own REST API format
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
