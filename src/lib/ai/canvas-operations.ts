@@ -1,6 +1,7 @@
 import { CanvasState, CanvasOperation, LayerType, LAYER_ORDER } from '@/types/canvas'
+import { selectRelevantRules } from './manga-rules'
 
-export function buildSystemPrompt(canvasState: CanvasState): string {
+export function buildSystemPrompt(canvasState: CanvasState, userPrompt?: string): string {
   const W = canvasState.width
   const H = canvasState.height
   const cx = Math.round(W / 2)
@@ -77,7 +78,7 @@ CRITICAL RULES — violating these ruins the drawing:
    - "shadows" layer: strokeWidth 8-12, strokeColor "#d4a8a8" face / "#c8c8d4" hair
    - "color" layer: addFilledRect or addShape with explicit fillColor, strokeWidth 0
 
-7. BOUNDS: All x within [0,${W}], all y within [0,${H}]. Never exceed canvas.`
+7. BOUNDS: All x within [0,${W}], all y within [0,${H}]. Never exceed canvas.${userPrompt ? selectRelevantRules(userPrompt) : ''}`
 }
 
 /**

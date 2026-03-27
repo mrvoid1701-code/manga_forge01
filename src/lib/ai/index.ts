@@ -11,20 +11,24 @@ export async function runAIAgent(
   messages: AIMessage[],
   canvasState: CanvasState
 ): Promise<AIResponse> {
+  // Extract the last user message to pass to buildSystemPrompt for rule injection
+  const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')
+  const userPrompt = lastUserMessage?.content ?? ''
+
   let response: AIResponse
 
   switch (config.provider) {
     case 'anthropic':
-      response = await callAnthropic(config.apiKey, messages, canvasState, config.model)
+      response = await callAnthropic(config.apiKey, messages, canvasState, config.model, userPrompt)
       break
     case 'openai':
-      response = await callOpenAI(config.apiKey, messages, canvasState, config.model)
+      response = await callOpenAI(config.apiKey, messages, canvasState, config.model, userPrompt)
       break
     case 'gemini':
-      response = await callGemini(config.apiKey, messages, canvasState, config.model)
+      response = await callGemini(config.apiKey, messages, canvasState, config.model, userPrompt)
       break
     case 'grok':
-      response = await callGrok(config.apiKey, messages, canvasState, config.model)
+      response = await callGrok(config.apiKey, messages, canvasState, config.model, userPrompt)
       break
     default:
       throw new Error(`Unknown provider: ${config.provider}`)

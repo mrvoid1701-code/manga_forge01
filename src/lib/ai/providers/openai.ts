@@ -7,14 +7,15 @@ export async function callOpenAI(
   apiKey: string,
   messages: AIMessage[],
   canvasState: CanvasState,
-  model = 'gpt-4o'
+  model = 'gpt-4o',
+  userPrompt = ''
 ): Promise<AIResponse> {
   const client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true })
 
   const response = await client.chat.completions.create({
     model,
     messages: [
-      { role: 'system', content: buildSystemPrompt(canvasState) },
+      { role: 'system', content: buildSystemPrompt(canvasState, userPrompt) },
       ...messages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }))
     ]
   })

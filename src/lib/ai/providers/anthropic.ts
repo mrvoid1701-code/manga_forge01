@@ -7,14 +7,15 @@ export async function callAnthropic(
   apiKey: string,
   messages: AIMessage[],
   canvasState: CanvasState,
-  model = 'claude-opus-4-6'
+  model = 'claude-opus-4-6',
+  userPrompt = ''
 ): Promise<AIResponse> {
   const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
 
   const response = await client.messages.create({
     model,
     max_tokens: 4096,
-    system: buildSystemPrompt(canvasState),
+    system: buildSystemPrompt(canvasState, userPrompt),
     messages: messages.map(m => ({ role: m.role, content: m.content }))
   })
 

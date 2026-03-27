@@ -37,12 +37,13 @@ export async function callGemini(
   apiKey: string,
   messages: AIMessage[],
   canvasState: CanvasState,
-  model = 'gemini-3-flash-preview'
+  model = 'gemini-3-flash-preview',
+  userPrompt = ''
 ): Promise<AIResponse> {
   // Gemini uses its own REST API format
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
 
-  const systemPrompt = buildSystemPrompt(canvasState)
+  const systemPrompt = buildSystemPrompt(canvasState, userPrompt)
 
   // Prepend system prompt as first user turn (Gemini doesn't have a system role)
   const geminiMessages = [

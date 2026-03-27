@@ -8,7 +8,8 @@ export async function callGrok(
   apiKey: string,
   messages: AIMessage[],
   canvasState: CanvasState,
-  model = 'grok-2'
+  model = 'grok-2',
+  userPrompt = ''
 ): Promise<AIResponse> {
   const client = new OpenAI({
     apiKey,
@@ -19,7 +20,7 @@ export async function callGrok(
   const response = await client.chat.completions.create({
     model,
     messages: [
-      { role: 'system', content: buildSystemPrompt(canvasState) },
+      { role: 'system', content: buildSystemPrompt(canvasState, userPrompt) },
       ...messages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }))
     ]
   })

@@ -50,12 +50,36 @@ function enforceLayerOrder(canvas: fabric.Canvas, newObj: fabric.Object): void {
   canvas.moveObjectTo(newObj, clampedIndex)
 }
 
+/**
+ * Converts an array of [x, y] points to a smooth SVG path using
+ * Catmull-Rom → Cubic Bezier conversion.
+ * With only 2 points it falls back to a straight line.
+ */
+function pointsToCatmullRomPath(points: number[][]): string {
+  if (points.length === 0) return ''
+  if (points.length === 1) return `M ${points[0][0]} ${points[0][1]}`
+  if (points.length === 2) {
+    return `M ${points[0][0]} ${points[0][1]} L ${points[1][0]} ${points[1][1]}`
+  }
+  let d = `M ${points[0][0]} ${points[0][1]}`
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = points[Math.min(points.length - 1, i + 2)]
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6
+    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2[0]} ${p2[1]}`
+  }
+  return d
+}
+
 export function applyOperation(canvas: fabric.Canvas, operation: CanvasOperation): void {
   switch (operation.op) {
     case 'addPath': {
-      const pathData = operation.points
-        .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`)
-        .join(' ')
+      const pathData = pointsToCatmullRomPath(operation.points)
       const path = new fabric.Path(pathData, {
         stroke: operation.strokeColor,
         strokeWidth: operation.strokeWidth,

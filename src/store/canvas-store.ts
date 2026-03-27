@@ -7,12 +7,14 @@ interface CanvasStore {
   isDrawing: boolean
   applyOperations: ((ops: CanvasOperation[]) => void) | null
   getPreviewUrl: (() => string | null) | null
+  getSvgData: (() => string | null) | null
   lastPreviewUrl: string | null
   setActiveLayer: (layer: LayerType) => void
   setIsDrawing: (drawing: boolean) => void
   updateCanvasState: (state: Partial<CanvasState>) => void
   setApplyOperations: (fn: ((ops: CanvasOperation[]) => void) | null) => void
   setGetPreviewUrl: (fn: (() => string | null) | null) => void
+  setGetSvgData: (fn: (() => string | null) | null) => void
   setLastPreviewUrl: (url: string | null) => void
 }
 
@@ -28,6 +30,7 @@ export const useCanvasStore = create<CanvasStore>((set) => ({
   isDrawing: false,
   applyOperations: null,
   getPreviewUrl: null,
+  getSvgData: null,
   lastPreviewUrl: null,
   setActiveLayer: (layer) => set({ activeLayer: layer }),
   setIsDrawing: (drawing) => set({ isDrawing: drawing }),
@@ -35,5 +38,6 @@ export const useCanvasStore = create<CanvasStore>((set) => ({
     set((prev) => ({ canvasState: { ...prev.canvasState, ...state } })),
   setApplyOperations: (fn) => set({ applyOperations: fn }),
   setGetPreviewUrl: (fn) => set({ getPreviewUrl: fn }),
+  setGetSvgData: (fn) => set({ getSvgData: fn }),
   setLastPreviewUrl: (url) => set({ lastPreviewUrl: url })
 }))
