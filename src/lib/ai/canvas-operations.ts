@@ -132,12 +132,15 @@ export function sanitizeOperations(
       }
     }
     if (op.op === 'addShape' || op.op === 'addFilledRect') {
+      const nx = clampX(op.x)
+      const ny = clampY(op.y)
       return {
         ...op,
-        x: clampX(op.x),
-        y: clampY(op.y),
-        width:  Math.max(1, op.width),
-        height: Math.max(1, op.height)
+        x: nx,
+        y: ny,
+        // Also clamp width/height so rect doesn't overflow canvas bounds
+        width:  Math.max(1, Math.min(op.width, W - nx)),
+        height: Math.max(1, Math.min(op.height, H - ny))
       }
     }
     if (op.op === 'addText') {
@@ -164,36 +167,33 @@ export function sanitizeOperations(
   )
 
   if (eyeShapes.length >= 2) {
-    // Separate into left-side and right-side by whether center x < cx or > cx
-    const leftEyes  = eyeShapes.filter((o) => (o.x + o.width / 2) < cx)
-    const rightEyes = eyeShapes.filter((o) => (o.x + o.width / 2) >= cx)
+    // Since layer-manager uses originX/Y:'center' for circles,
+    // x IS the center — do NOT add width/2 here.
+    const leftEyes  = eyeShapes.filter((o) => o.x < cx)
+    const rightEyes = eyeShapes.filter((o) => o.x >= cx)
 
     if (leftEyes.length > 0 && rightEyes.length > 0) {
-      // Use the left eye as the reference; mirror it to get correct right eye x.
-      // Average the y values to ensure horizontal alignment.
       const refLeft  = leftEyes[0]
       const refRight = rightEyes[0]
       const avgY     = Math.round((refLeft.y + refRight.y) / 2)
 
-      // The canonical eye offset from center
-      const leftOffset  = cx - (refLeft.x + refLeft.width / 2)
-      const rightOffset = (refRight.x + refRight.width / 2) - cx
-      // If they differ by more than 10px, force symmetry using the left eye's offset.
-      if (Math.abs(leftOffset - rightOffset) > 10) {
-        const correctedRightX = Math.round(cx + leftOffset - refRight.width / 2)
-        // Apply correction to all right-side eye shapes by the same delta
+      // Offset of each eye from canvas center
+      const leftOffset  = cx - refLeft.x   // e.g. 400 - 345 = 55
+      const rightOffset = refRight.x - cx  // e.g. 427 - 400 = 27 (wrong, should be 55)
+
+      if (Math.abs(leftOffset - rightOffset) > 8) {
+        // Mirror: right eye should be cx + leftOffset
+        const correctedRightX = cx + leftOffset
         const delta = correctedRightX - refRight.x
+        // Shift ALL right-side eye shapes by the same delta to keep relative positions
         eyeShapes
-          .filter((o) => (o.x + o.width / 2) >= cx)
+          .filter((o) => o.x >= cx)
           .forEach((o) => {
             o.x = clampX(o.x + delta)
             o.y = clampY(avgY)
           })
       } else {
-        // Symmetry is close enough — just unify Y
-        eyeShapes.forEach((o) => {
-          o.y = clampY(avgY)
-        })
+        eyeShapes.forEach((o) => { o.y = clampY(avgY) })
       }
     }
   }
