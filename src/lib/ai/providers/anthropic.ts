@@ -1,0 +1,25 @@
+import Anthropic from '@anthropic-ai/sdk'
+import { AIMessage, AIResponse } from '@/types/ai'
+import { CanvasState } from '@/types/canvas'
+import { buildSystemPrompt } from '../canvas-operations'
+
+export async function callAnthropic(
+  apiKey: string,
+  messages: AIMessage[],
+  canvasState: CanvasState,
+  model = 'claude-opus-4-6'
+): Promise<AIResponse> {
+  const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
+
+  const response = await client.messages.create({
+    model,
+    max_tokens: 4096,
+    system: buildSystemPrompt(canvasState),
+    messages: messages.map(m => ({ role: m.role, content: m.content }))
+  })
+
+  const content = response.content[0]
+  if (content.type !== 'text') throw new Error('Unexpected response type')
+
+  return JSON.parse(content.text) as AIResponse
+}
