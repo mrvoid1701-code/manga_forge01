@@ -6,6 +6,7 @@ interface CanvasStore {
   activeLayer: LayerType
   isDrawing: boolean
   applyOperations: ((ops: CanvasOperation[]) => void) | null
+  applyImageUrl: ((url: string, layer: LayerType) => Promise<void>) | null
   getPreviewUrl: (() => string | null) | null
   getSvgData: (() => string | null) | null
   lastPreviewUrl: string | null
@@ -13,6 +14,7 @@ interface CanvasStore {
   setIsDrawing: (drawing: boolean) => void
   updateCanvasState: (state: Partial<CanvasState>) => void
   setApplyOperations: (fn: ((ops: CanvasOperation[]) => void) | null) => void
+  setApplyImageUrl: (fn: ((url: string, layer: LayerType) => Promise<void>) | null) => void
   setGetPreviewUrl: (fn: (() => string | null) | null) => void
   setGetSvgData: (fn: (() => string | null) | null) => void
   setLastPreviewUrl: (url: string | null) => void
@@ -29,6 +31,7 @@ export const useCanvasStore = create<CanvasStore>((set) => ({
   activeLayer: 'lineart',
   isDrawing: false,
   applyOperations: null,
+  applyImageUrl: null,
   getPreviewUrl: null,
   getSvgData: null,
   lastPreviewUrl: null,
@@ -37,6 +40,7 @@ export const useCanvasStore = create<CanvasStore>((set) => ({
   updateCanvasState: (state) =>
     set((prev) => ({ canvasState: { ...prev.canvasState, ...state } })),
   setApplyOperations: (fn) => set({ applyOperations: fn }),
+  setApplyImageUrl: (fn) => set({ applyImageUrl: fn }),
   setGetPreviewUrl: (fn) => set({ getPreviewUrl: fn }),
   setGetSvgData: (fn) => set({ getSvgData: fn }),
   setLastPreviewUrl: (url) => set({ lastPreviewUrl: url })

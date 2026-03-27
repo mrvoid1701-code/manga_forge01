@@ -9,7 +9,7 @@ export default function MangaCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fabricRef = useRef<fabric.Canvas | null>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const { canvasState, activeLayer, setApplyOperations, setGetPreviewUrl, setGetSvgData } = useCanvasStore()
+  const { canvasState, activeLayer, setApplyOperations, setApplyImageUrl, setGetPreviewUrl, setGetSvgData } = useCanvasStore()
 
   useEffect(() => {
     if (!canvasRef.current || !wrapperRef.current) return
@@ -52,16 +52,39 @@ export default function MangaCanvas() {
     return fabricRef.current.toSVG()
   }, [])
 
+  const applyImageUrl = useCallback(async (url: string, layer: import('@/types/canvas').LayerType): Promise<void> => {
+    if (!fabricRef.current) return
+    const canvas = fabricRef.current
+    // Clear existing objects on this layer first
+    const toRemove = canvas.getObjects().filter((o) => (o as any).data?.layer === layer)
+    toRemove.forEach((o) => canvas.remove(o))
+    // Load image and add to canvas
+    const img = await fabric.Image.fromURL(url, { crossOrigin: 'anonymous' })
+    img.set({
+      left: 0,
+      top: 0,
+      scaleX: canvas.width! / (img.width ?? 1),
+      scaleY: canvas.height! / (img.height ?? 1),
+      selectable: true,
+      evented: true,
+    });
+    (img as any).data = { layer }
+    canvas.add(img)
+    canvas.renderAll()
+  }, [])
+
   useEffect(() => {
     setApplyOperations(applyOperations)
+    setApplyImageUrl(applyImageUrl)
     setGetPreviewUrl(getPreviewUrl)
     setGetSvgData(getSvgData)
     return () => {
       setApplyOperations(null)
+      setApplyImageUrl(null)
       setGetPreviewUrl(null)
       setGetSvgData(null)
     }
-  }, [applyOperations, setApplyOperations, getPreviewUrl, setGetPreviewUrl, getSvgData, setGetSvgData])
+  }, [applyOperations, setApplyOperations, applyImageUrl, setApplyImageUrl, getPreviewUrl, setGetPreviewUrl, getSvgData, setGetSvgData])
 
   function handleExportSvg() {
     const svg = getSvgData()
