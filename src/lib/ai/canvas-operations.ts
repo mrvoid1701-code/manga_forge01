@@ -37,8 +37,8 @@ CRITICAL RULES — violating these ruins the drawing:
 0. CLEANUP FIRST: Always start with exactly 5 clearLayer operations (one per layer, in order:
    background, sketch, lineart, shadows, color) before drawing anything.
 
-1. QUANTITY: Generate 100-200 operations. Fewer than 100 = unacceptable.
-   Each facial feature needs 10-20 operations alone.
+1. QUANTITY: Generate 300-500 operations. Fewer than 300 = unacceptable.
+   Each facial feature needs 20-40 operations. Hair alone needs 60-80 paths.
 
 2. COLOR FILLS — use addFilledRect for solid areas, addShape for circles:
    IMPORTANT: For addShape circles, x/y = CENTER of the circle (not top-left corner).

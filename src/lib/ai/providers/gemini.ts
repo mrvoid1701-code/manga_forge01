@@ -61,10 +61,9 @@ export async function callGemini(
     body: JSON.stringify({
       contents: geminiMessages,
       generationConfig: {
-        // Lower temperature for more deterministic JSON output
         temperature: 0.4,
-        // Request JSON output mode when supported
-        responseMimeType: 'application/json'
+        responseMimeType: 'application/json',
+        maxOutputTokens: 8192
       }
     })
   })

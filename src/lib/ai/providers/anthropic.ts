@@ -14,7 +14,7 @@ export async function callAnthropic(
 
   const response = await client.messages.create({
     model,
-    max_tokens: 4096,
+    max_tokens: 8192,
     system: buildSystemPrompt(canvasState, userPrompt),
     messages: messages.map(m => ({ role: m.role, content: m.content }))
   })

@@ -19,6 +19,7 @@ export async function callGrok(
 
   const response = await client.chat.completions.create({
     model,
+    max_tokens: 8192,
     messages: [
       { role: 'system', content: buildSystemPrompt(canvasState, userPrompt) },
       ...messages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }))
