@@ -18,12 +18,13 @@ export const LAYER_OPACITY: Record<LayerType, number> = {
  * background: 0–999, sketch: 1000–1999, lineart: 2000–2999,
  * shadows: 3000–3999, color: 4000–4999
  */
+// Correct render order: fills below lineart so outlines always show through.
 const LAYER_Z_BASE: Record<LayerType, number> = {
   background: 0,
-  sketch: 1000,
-  lineart: 2000,
-  shadows: 3000,
-  color: 4000
+  color: 1000,
+  shadows: 2000,
+  sketch: 3000,
+  lineart: 4000
 }
 
 /**
@@ -77,8 +78,11 @@ export function applyOperation(canvas: fabric.Canvas, operation: CanvasOperation
       const shape =
         operation.shape === 'circle'
           ? new fabric.Circle({
+              // Use center origin so x/y are the circle center (matching AI expectations)
               left: operation.x,
               top: operation.y,
+              originX: 'center',
+              originY: 'center',
               radius: operation.width / 2,
               fill: fillValue,
               stroke: strokeValue,

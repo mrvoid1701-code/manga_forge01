@@ -39,14 +39,19 @@ CRITICAL RULES — violating these ruins the drawing:
 1. QUANTITY: Generate 100-200 operations. Fewer than 100 = unacceptable.
    Each facial feature needs 10-20 operations alone.
 
-2. COLOR FILLS — use addFilledRect for ALL solid color areas:
+2. COLOR FILLS — use addFilledRect for solid areas, addShape for circles:
+   IMPORTANT: For addShape circles, x/y = CENTER of the circle (not top-left corner).
+   For addFilledRect, x/y = TOP-LEFT corner.
+
    - Skin base: {"op":"addFilledRect","layer":"color","x":${cx - 100},"y":${headCY - 120},"width":200,"height":240,"fillColor":"#FFE0BD","strokeColor":"transparent","strokeWidth":0}
-   - Left iris:  {"op":"addShape","layer":"color","shape":"circle","x":${leftEyeX - 14},"y":${eyeY - 14},"width":28,"height":28,"fillColor":"#4a90d9","strokeColor":"transparent","strokeWidth":0}
-   - Right iris: {"op":"addShape","layer":"color","shape":"circle","x":${rightEyeX - 14},"y":${eyeY - 14},"width":28,"height":28,"fillColor":"#4a90d9","strokeColor":"transparent","strokeWidth":0}
+   - Left iris:  {"op":"addShape","layer":"color","shape":"circle","x":${leftEyeX},"y":${eyeY},"width":28,"height":28,"fillColor":"#4a90d9","strokeColor":"transparent","strokeWidth":0}
+   - Right iris: {"op":"addShape","layer":"color","shape":"circle","x":${rightEyeX},"y":${eyeY},"width":28,"height":28,"fillColor":"#4a90d9","strokeColor":"transparent","strokeWidth":0}
+   - Left pupil:  {"op":"addShape","layer":"color","shape":"circle","x":${leftEyeX},"y":${eyeY},"width":14,"height":14,"fillColor":"#1a1a2e","strokeColor":"transparent","strokeWidth":0}
+   - Right pupil: {"op":"addShape","layer":"color","shape":"circle","x":${rightEyeX},"y":${eyeY},"width":14,"height":14,"fillColor":"#1a1a2e","strokeColor":"transparent","strokeWidth":0}
    - Lips fill:  {"op":"addFilledRect","layer":"color","x":${cx - 20},"y":${mouthY - 8},"width":40,"height":16,"fillColor":"#e8a0a0","strokeColor":"transparent","strokeWidth":0}
-   - Hair:       addFilledRect blocks matching requested hair color
+   - Hair:       addFilledRect blocks matching requested hair color, covering hair area
    - Background: 3-4 addFilledRect with light gradient-like colors on "background" layer
-   NEVER use addShape or addPath for fills — they default to transparent.
+   NEVER use addPath for fills.
 
 3. PROPORTIONS — use EXACTLY these coordinates (do not invent new ones):
    - Head: oval centered at (${cx}, ${headCY}), width 200px, height 240px
